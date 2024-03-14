@@ -4,19 +4,16 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
 
     if($_SESSION['role'] == 'Admin') {
         include "../Connexion_BDD.php";
-        include "data/coach.php";
-        include "data/subject.php";
+        include "data/student.php";
         include "data/grade.php";
-        $coachs = getAllCoachs($conn);
-        
-        
+        $students = getAllStudents($conn);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Coach</title>
+    <title>Admin - Students</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="icon" href="../images/_LOGO HD.png">
@@ -26,23 +23,10 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
 <body>
     <?php
         include "inc/navbar.php"; 
-        if($coachs != 0){
+        if($students != 0){
     ?>
     <div class="container mt-5">
-        <a href="coach-add.php" class="btn btn-dark">Add New Coach</a>
-        
-        <form action="coach-search.php" 
-              class="mt-3 n-table">
-            <div class="input-group mb-3">
-                <input type="text" 
-                       class="form-control"
-                       name="searchkey"
-                       placeholder="Search.......">
-                <button class="btn btn-primary" id="gBtn">
-                    <i class="fa fa-search" aria-hidden="true"></i>
-                </button>
-            </div>
-        </form>
+        <a href="student-add.php" class="btn btn-dark">Add New Student</a>
 
         <?php if(isset($_GET['error'])) { ?>
             <div class="alert alert-danger mt-3 n-table" role="alert">
@@ -64,49 +48,32 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
                     <th scope="col">First Name</th>
                     <th scope="col">Last Name</th>
                     <th scope="col">Username</th>
-                    <th scope="col">Subject</th>
                     <th scope="col">Grade</th>
                     <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
-                <?php $i = 0; foreach($coachs as $coach) {
+                <?php $i = 0; foreach($students as $student) {
                     $i++; ?>
                 <tr>
                     <th scope="row"><?=$i?></th>
-                    <td><?=$coach['coach_id']?></td>
-                    <td><?=$coach['fname']?></td>
-                    <td><?=$coach['lname']?></td>
-                    <td><?=$coach['username']?></td>
+                    <td><?=$student['student_id']?></td>
+                    <td><?=$student['fname']?></td>
+                    <td><?=$student['lname']?></td>
+                    <td><?=$student['username']?></td>
+                    
                     <td>
                         <?php
-                        $s = '';
-                        $subjects = str_split(trim($coach['subjects']));
-                        foreach($subjects as $subject){
-                            $s_temp = getSubjectsById($subject, $conn);
-                            if($s_temp !=0)
-                            $s .=$s_temp['subject_code'].', ';
+                        $grade =$student['grade'];
+                        $g_temp = getGradeById($grade, $conn);
+                        if($g_temp !=0){
+                            echo $g_temp['grade'];
                         }
-                        echo $s;
                         ?>
                     </td>
                     <td>
-                        <?php
-                        $g = '';
-                        $grades = str_split(trim($coach['grades']));
-                        foreach($grades as $grade){
-                            $g_temp = getGradeById($grade, $conn);
-                            if($g_temp !=0)
-                            $g .=$g_temp['grade'].',';
-                        }
-                        echo $g;
-                        ?>
-                    </td>
-                    <td>
-                        <a href="coach-edit.php?coach_id=<?=$coach['coach_id']?>" class="btn btn-warning">Edit</a>
-
-                        <a href="coach-delete.php?coach_id=<?=$coach['coach_id']?>"
-                           class="btn btn-danger">Delete</a>
+                        <a href="student-edit.php?student_id=<?=$student['student_id']?>" class="btn btn-warning">Edit</a>
+                        <a href="student-delete.php?student_id=<?=$student['student_id']?>" class="btn btn-danger">Delete</a>
                     </td>
                 </tr>
                 <?php } ?>
@@ -122,7 +89,7 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function(){
-            $("#navLinks li:nth-child(2) a").addClass('active');
+            $("#navLinks li:nth-child(3) a").addClass('active');
         });
     </script>
 </body>

@@ -27,7 +27,7 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
                 <i class="fa fa-user-md fs-1" aria-hidden="true"></i><br>
                     Coachs
                 </a>
-                <a href="" class="col btn btn-dark m-2 py-3">
+                <a href="student.php" class="col btn btn-dark m-2 py-3">
                 <i class="fa fa-graduation-cap fs-1" aria-hidden="true"></i><br>
                     Students
                 </a>
@@ -55,6 +55,7 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
                 <i class="fa fa-envelope fs-1" aria-hidden="true"></i><br>
                     Message
                 </a>
+                
                 <a href="" class="col btn btn-primary m-2 py-3 col-5">
                 <i class="fa fa-cogs fs-1" aria-hidden="true"></i><br>
                     Settings
