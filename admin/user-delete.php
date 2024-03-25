@@ -2,29 +2,29 @@
 session_start();
 if (isset($_SESSION['admin_id']) &&
     isset($_SESSION['role']) &&
-    isset($_GET['coach_id'])){
+    isset($_GET['user_id'])){
 
     if($_SESSION['role'] == 'Admin') {
         include "../Connexion_BDD.php";
-        include "data/coach.php";
+        include "data/user.php";
 
-        $id=$_GET['coach_id'];
-        if(removeCoach($id, $conn)){
+        $id=$_GET['user_id'];
+        if(removeUser($id, $conn)){
             $sm = "Successfully Deleted!";
-            header("Location: coach.php?success=$sm");
+            header("Location: user.php?success=$sm");
             exit;
         }else{
             $sm = "Unknow error occurred";
-            header("Location: coach.php?error=$sm");
+            header("Location: user.php?error=$sm");
             exit;
         }
 
 }else {
-    header("Location: coach.php");
+    header("Location: user.php");
     exit;
 }
 
 }else {
-    header("Location: coach.php");
+    header("Location: user.php");
     exit;
 }

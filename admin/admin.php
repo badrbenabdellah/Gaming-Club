@@ -4,16 +4,17 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
 
     if($_SESSION['role'] == 'Admin') {
         include "../Connexion_BDD.php";
-        include "data/student.php";
-        include "data/grade.php";
-        $students = getAllStudents($conn);
+        include "data/admin.php";
+        $admins = getAllAdmins($conn);
+        
+        
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Students</title>
+    <title>Admin - Admin</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="icon" href="../images/_LOGO HD.png">
@@ -23,24 +24,38 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
 <body>
     <?php
         include "inc/navbar.php"; 
-        if($students != 0){
+        if($admins != 0){
     ?>
     <div class="container mt-5">
-        <a href="student-add.php" class="btn btn-dark">Add New Student</a>
+        <a href="admin-add.php" class="btn btn-dark">Add New Admin</a>
+        
+        <form action="admin-search.php" 
+              class="mt-3"
+              method="post">
+            <div class="input-group mb-3">
+                <input type="text" 
+                       class="form-control"
+                       name="searchkey"
+                       placeholder="Search.......">
+                <button class="btn btn-primary" id="gBtn">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+            </div>
+        </form>
 
         <?php if(isset($_GET['error'])) { ?>
-            <div class="alert alert-danger mt-3 n-table" role="alert">
+            <div class="alert alert-danger mt-3 " role="alert">
                 <?=$_GET['error']?>
             </div>
         <?php } ?>
 
         <?php if(isset($_GET['success'])) { ?>
-            <div class="alert alert-info mt-3 n-table" role="alert">
+            <div class="alert alert-info mt-3 " role="alert">
                 <?=$_GET['success']?>
             </div>
         <?php } ?>
         <div class="table-responsive">
-        <table class="table table-bordered mt-3 n-table">
+        <table class="table table-bordered mt-3 ">
             <thead>
                 <tr>
                     <th scope="col">#</th>
@@ -48,32 +63,23 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
                     <th scope="col">First Name</th>
                     <th scope="col">Last Name</th>
                     <th scope="col">Username</th>
-                    <th scope="col">Grade</th>
+                    <th scope="col">Email</th>
                     <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
-                <?php $i = 0; foreach($students as $student) {
+                <?php $i = 0; foreach($admins as $admin) {
                     $i++; ?>
                 <tr>
                     <th scope="row"><?=$i?></th>
-                    <td><?=$student['student_id']?></td>
-                    <td><?=$student['fname']?></td>
-                    <td><?=$student['lname']?></td>
-                    <td><?=$student['username']?></td>
-                    
+                    <td><?=$admin['admin_id']?></td>
+                    <td><?=$admin['fname']?></td>
+                    <td><?=$admin['lname']?></td>
+                    <td><?=$admin['username']?></td>
+                    <td><?=$admin['email']?></td>
                     <td>
-                        <?php
-                        $grade =$student['grade'];
-                        $g_temp = getGradeById($grade, $conn);
-                        if($g_temp !=0){
-                            echo $g_temp['grade'];
-                        }
-                        ?>
-                    </td>
-                    <td>
-                        <a href="student-edit.php?student_id=<?=$student['student_id']?>" class="btn btn-warning">Edit</a>
-                        <a href="student-delete.php?student_id=<?=$student['student_id']?>" class="btn btn-danger">Delete</a>
+                        <a href="admin-edit.php?admin_id=<?=$admin['admin_id']?>" class="btn btn-warning">Edit</a>
+                        <a href="admin-delete.php?admin_id=<?=$admin['admin_id']?>" class="btn btn-danger">Delete</a>
                     </td>
                 </tr>
                 <?php } ?>
@@ -89,7 +95,7 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function(){
-            $("#navLinks li:nth-child(3) a").addClass('active');
+            $("#navLinks li:nth-child(2) a").addClass('active');
         });
     </script>
 </body>

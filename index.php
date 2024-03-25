@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,6 +52,18 @@
             La Faculté des Sciences et Techniques de Tanger (FSTT), relevant de l’Université Abdelmalek Essaâdi a été créée en 1995. Elle fait partie des établissements de l’enseignement supérieur à accès régulé et a pour missions la formation initiale dans les domaines scientifiques et techniques, la formation continue ainsi que la recherche et le développement dans les domaines des sciences et techniques.
             </p>
         </section>
+        <!--competitions-->
+        <h1>Liste des Compétitions</h1>
+        <?php foreach ($competitions as $competition): ?>
+            <div class="competition">
+                <h2><?= $competition['title'] ?></h2>
+                <p><strong>Description :</strong> <?= $competition['description'] ?></p>
+                <p><strong>Date de début :</strong> <?= $competition['start_date'] ?></p>
+                <p><strong>Date de fin :</strong> <?= $competition['end_date'] ?></p>
+                <p><strong>Prix :</strong> <?= $competition['prizes'] ?></p>
+                <p><strong>Conditions :</strong> <?= $competition['conditions'] ?></p>
+            </div>
+        <?php endforeach; ?>
 
         <!-- Debut Partie des card About-->
         <section id="about" class="d-flex justify-content-center align-items-center flex-column">

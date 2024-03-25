@@ -6,25 +6,25 @@ if (isset($_SESSION['admin_id']) &&
     if ($_SESSION['role'] == 'Admin') {
       
        include "../Connexion_BDD.php";
-       include "data/subject.php";
        include "data/grade.php";
-       $subjects = getAllSubjects($conn);
-       $grades = getAllGrades($conn);
 
        $fname = '';
        $lname = '';
        $uname = '';
+       $email = '';
 
        if (isset($_GET['fname'])) $fname = $_GET['fname'];
        if (isset($_GET['lname'])) $lname = $_GET['lname'];
        if (isset($_GET['uname'])) $uname = $_GET['uname'];
+       if (isset($_GET['email'])) $email = $_GET['email'];
+
  ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Add Coach</title>
+    <title>Admin - Add Admin</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="icon" href="../images/_LOGO HD.png">
@@ -32,17 +32,17 @@ if (isset($_SESSION['admin_id']) &&
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-<?php 
+     <?php 
         include "inc/navbar.php";
      ?>
      <div class="container mt-5">
-        <a href="coach.php"
+        <a href="admin.php"
            class="btn btn-dark">Go Back</a>
 
         <form method="post"
               class="shadow p-3 mt-5 form-w" 
-              action="req/coach-add.php">
-        <h3>Add New Coach</h3><hr>
+              action="req/admin-add.php">
+        <h3>Add New Admin</h3><hr>
         <?php if (isset($_GET['error'])) { ?>
           <div class="alert alert-danger" role="alert">
            <?=$_GET['error']?>
@@ -74,6 +74,15 @@ if (isset($_SESSION['admin_id']) &&
                  value="<?=$uname?>"
                  name="username">
         </div>
+
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input type="email" 
+                 class="form-control"
+                 value="<?=$email?>" 
+                 name="email">
+        </div>
+
         <div class="mb-3">
           <label class="form-label">Password</label>
           <div class="input-group mb-3">
@@ -86,34 +95,6 @@ if (isset($_SESSION['admin_id']) &&
                       Random</button>
           </div>
           
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Subject</label>
-          <div class="row row-cols-5">
-            <?php foreach ($subjects as $subject): ?>
-            <div class="col">
-              <input type="checkbox"
-                     name="subjects[]"
-                     value="<?=$subject['subject_id']?>">
-                     <?=$subject['subject']?>
-            </div>
-            <?php endforeach ?>
-             
-          </div>
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Grade</label>
-          <div class="row row-cols-5">
-            <?php foreach ($grades as $grade): ?>
-            <div class="col">
-              <input type="checkbox"
-                     name="grades[]"
-                     value="<?=$grade['grade_id']?>">
-                     <?=$grade['grade_code']?>-<?=$grade['grade']?>
-            </div>
-            <?php endforeach ?>
-             
-          </div>
         </div>
 
       <button type="submit" class="btn btn-primary">Add</button>

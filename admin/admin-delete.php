@@ -2,29 +2,29 @@
 session_start();
 if (isset($_SESSION['admin_id']) &&
     isset($_SESSION['role']) &&
-    isset($_GET['student_id'])){
+    isset($_GET['admin_id'])){
 
     if($_SESSION['role'] == 'Admin') {
         include "../Connexion_BDD.php";
-        include "data/student.php";
+        include "data/admin.php";
 
-        $id=$_GET['student_id'];
-        if(removeStudent($id, $conn)){
+        $id=$_GET['admin_id'];
+        if(removeAdmin($id, $conn)){
             $sm = "Successfully Deleted!";
-            header("Location: student.php?success=$sm");
+            header("Location: admin.php?success=$sm");
             exit;
         }else{
             $sm = "Unknow error occurred";
-            header("Location: student.php?error=$sm");
+            header("Location: admin.php?error=$sm");
             exit;
         }
 
 }else {
-    header("Location: student.php");
+    header("Location: admin.php");
     exit;
 }
 
 }else {
-    header("Location: student.php");
+    header("Location: admin.php");
     exit;
 }

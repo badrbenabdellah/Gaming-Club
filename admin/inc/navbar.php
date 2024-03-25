@@ -12,29 +12,17 @@
                 <a class="nav-link" aria-current="page" href="index.php">Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="coach.php">Coachs</a>
+                    <a class="nav-link" href="admin.php">Admins</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="student.php">Students</a>
+                    <a class="nav-link" href="user.php">Users</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#about">Registrar-office</a>
+                    <a class="nav-link" href="competition.php">Competition</a>
+                </li>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#contact">Class</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="#about">Section</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#contact">Schedule</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#contact">Course</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#contact">Message</a>
+                    <a class="nav-link" href="actualité.php">Actualité</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#contact">Settings</a>

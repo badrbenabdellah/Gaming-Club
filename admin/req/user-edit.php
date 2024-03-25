@@ -9,52 +9,50 @@ if (isset($_SESSION['admin_id']) &&
 if (isset($_POST['fname'])      &&
     isset($_POST['lname'])      &&
     isset($_POST['username'])   &&
-    isset($_POST['student_id']) &&
-    isset($_POST['grade'])) {
+    isset($_POST['user_id']) &&
+    isset($_POST['email'])) {
     
     include '../../Connexion_BDD.php';
-    include "../data/student.php";
+    include "../data/user.php";
 
     $fname = $_POST['fname'];
     $lname = $_POST['lname'];
     $uname = $_POST['username'];
+    $email = $_POST['email'];
+    $user_id = $_POST['user_id'];
 
-    $student_id = $_POST['student_id'];
-    
-    $grade = $_POST['grade'];
-
-    $data = 'student_id='.$student_id;
+    $data = 'user_id='.$user_id;
 
     if (empty($fname)) {
         $em  = "First name is required";
-        header("Location: ../student-edit.php?error=$em&$data");
+        header("Location: ../user-edit.php?error=$em&$data");
         exit;
     }else if (empty($lname)) {
         $em  = "Last name is required";
-        header("Location: ../student-edit.php?error=$em&$data");
+        header("Location: ../user-edit.php?error=$em&$data");
         exit;
     }else if (empty($uname)) {
         $em  = "Username is required";
-        header("Location: ../student-edit.php?error=$em&$data");
+        header("Location: ../user-edit.php?error=$em&$data");
         exit;
-    }else if (!unameIsUnique($uname, $conn, $student_id)) {
+    }else if (!unameIsUnique($uname, $conn, $user_id)) {
         $em  = "Username is taken! try another";
-        header("Location: ../student-edit.php?error=$em&$data");
+        header("Location: ../user-edit.php?error=$em&$data");
         exit;
     }else {
         $sql = "UPDATE students SET
-                username = ?, fname=?, lname=?, grade=?
-                WHERE student_id=?";
+                username = ?, fname=?, lname=?, email=?
+                WHERE user_id=?";
         $stmt = $conn->prepare($sql);
-        $stmt->execute([$uname,$fname, $lname, $grade, $student_id]);
+        $stmt->execute([$uname,$fname, $lname, $email, $user_id]);
         $sm = "successfully updated!";
-        header("Location: ../student-edit.php?success=$sm&$data");
+        header("Location: ../user-edit.php?success=$sm&$data");
         exit;
     }
     
   }else {
     $em = "An error occurred";
-    header("Location: ../student-edit.php?error=$em");
+    header("Location: ../user-edit.php?error=$em");
     exit;
   }
 

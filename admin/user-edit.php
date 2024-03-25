@@ -2,22 +2,18 @@
 session_start();
 if (isset($_SESSION['admin_id']) && 
     isset($_SESSION['role'])     &&
-    isset($_GET['student_id'])) {
+    isset($_GET['user_id'])) {
 
     if ($_SESSION['role'] == 'Admin') {
       
        include "../Connexion_BDD.php";
-       include "data/subject.php";
-       include "data/grade.php";
-       include "data/student.php";
-       $subjects = getAllSubjects($conn);
-       $grades = getAllGrades($conn);
+       include "data/user.php";
        
-       $student_id = $_GET['student_id'];
-       $student = getStudentById($student_id, $conn);
+       $user_id = $_GET['user_id'];
+       $user = getUserById($user_id, $conn);
 
-       if ($student == 0) {
-         header("Location: student.php");
+       if ($user == 0) {
+         header("Location: user.php");
          exit;
        }
 
@@ -39,7 +35,7 @@ if (isset($_SESSION['admin_id']) &&
         include "inc/navbar.php";
      ?>
      <div class="container mt-5">
-        <a href="student.php"
+        <a href="user.php"
            class="btn btn-dark">Go Back</a>
 
 
@@ -47,8 +43,8 @@ if (isset($_SESSION['admin_id']) &&
         <div class="col">
         <form method="post"
               class="shadow p-3 mt-5 form-w" 
-              action="req/student-edit.php">
-        <h3>Edit Student Info</h3><hr>
+              action="req/user-edit.php">
+        <h3>Edit User Info</h3><hr>
         <?php if (isset($_GET['error'])) { ?>
           <div class="alert alert-danger" role="alert">
            <?=$_GET['error']?>
@@ -63,51 +59,34 @@ if (isset($_SESSION['admin_id']) &&
           <label class="form-label">First name</label>
           <input type="text" 
                  class="form-control"
-                 value="<?=$student['fname']?>" 
+                 value="<?=$user['fname']?>" 
                  name="fname">
         </div>
         <div class="mb-3">
           <label class="form-label">Last name</label>
           <input type="text" 
                  class="form-control"
-                 value="<?=$student['lname']?>"
+                 value="<?=$user['lname']?>"
                  name="lname">
         </div>
         <div class="mb-3">
           <label class="form-label">Username</label>
           <input type="text" 
                  class="form-control"
-                 value="<?=$student['username']?>"
+                 value="<?=$user['username']?>"
                  name="username">
         </div>
         <input type="text"
-                value="<?=$student['student_id']?>"
-                name="student_id"
+                value="<?=$user['user_id']?>"
+                name="user_id"
                 hidden>
 
         <div class="mb-3">
-          <label class="form-label">Grade</label>
-          <div class="row row-cols-5">
-            <?php 
-            $grade_ids = str_split(trim($student['grade']));
-            foreach ($grades as $grade){ 
-              $checked =0;
-              foreach ($grade_ids as $grade_id ) {
-                if ($grade_id == $grade['grade_id']) {
-                   $checked =1;
-                }
-              }
-            ?>
-            <div class="col">
-              <input type="radio"
-                     name="grade"
-                     <?php if($checked) echo "checked"; ?>
-                     value="<?=$grade['grade_id']?>">
-                     <?=$grade['grade_code']?>-<?=$grade['grade']?>
-            </div>
-            <?php } ?>
-             
-          </div>
+          <label class="form-label">Email</label>
+          <input type="email" 
+              	 class="form-control"
+                 value="<?=$user['email']?>"
+                 name="email">
         </div>
 
       <button type="submit" 
@@ -118,7 +97,7 @@ if (isset($_SESSION['admin_id']) &&
         <div class="col"> 
      <form method="post"
               class="shadow p-3 my-5 form-w" 
-              action="req/student-change.php"
+              action="req/user-change.php"
               id="change_password">
         <h3>Change Password</h3><hr>
           <?php if (isset($_GET['perror'])) { ?>
@@ -153,8 +132,8 @@ if (isset($_SESSION['admin_id']) &&
             
           </div>
           <input type="text"
-                value="<?=$student['student_id']?>"
-                name="student_id"
+                value="<?=$user['user_id']?>"
+                name="user_id"
                 hidden>
 
           <div class="mb-3">
@@ -204,11 +183,11 @@ if (isset($_SESSION['admin_id']) &&
 <?php 
 
   }else {
-    header("Location: student.php");
+    header("Location: user.php");
     exit;
   } 
 }else {
-	header("Location: student.php");
+	header("Location: user.php");
 	exit;
 } 
 

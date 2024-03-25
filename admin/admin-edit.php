@@ -2,22 +2,18 @@
 session_start();
 if (isset($_SESSION['admin_id']) && 
     isset($_SESSION['role'])     &&
-    isset($_GET['coach_id'])) {
+    isset($_GET['admin_id'])) {
 
     if ($_SESSION['role'] == 'Admin') {
       
        include "../Connexion_BDD.php";
-       include "data/subject.php";
-       include "data/grade.php";
-       include "data/coach.php";
-       $subjects = getAllSubjects($conn);
-       $grades = getAllGrades($conn);
+       include "data/admin.php";
        
-       $coach_id = $_GET['coach_id'];
-       $coach = getCoachById($coach_id, $conn);
+       $admin_id = $_GET['admin_id'];
+       $admin = getAdminById($admin_id, $conn);
 
-       if ($coach == 0) {
-         header("Location: coach.php");
+       if ($admin == 0) {
+         header("Location: admin.php");
          exit;
        }
        
@@ -27,7 +23,7 @@ if (isset($_SESSION['admin_id']) &&
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Edit Coach</title>
+    <title>Admin - Edit Admin</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="icon" href="../images/_LOGO HD.png">
@@ -39,7 +35,7 @@ if (isset($_SESSION['admin_id']) &&
         include "inc/navbar.php";
      ?>
      <div class="container mt-5">
-        <a href="coach.php"
+        <a href="admin.php"
            class="btn btn-dark">Go Back</a>
 
         <div class="row"> <!-- Nouvelle ligne pour placer les deux formulaires côte à côte -->
@@ -47,8 +43,8 @@ if (isset($_SESSION['admin_id']) &&
 
             <form method="post"
                   class="shadow p-3 mt-5 form-w" 
-                  action="req/coach-edit.php">
-            <h3>Edit Coach</h3><hr>
+                  action="req/admin-edit.php">
+            <h3>Edit Admin</h3><hr>
             <?php if (isset($_GET['error'])) { ?>
               <div class="alert alert-danger" role="alert">
               <?=$_GET['error']?>
@@ -63,73 +59,34 @@ if (isset($_SESSION['admin_id']) &&
               <label class="form-label">First name</label>
               <input type="text" 
                     class="form-control"
-                    value="<?=$coach['fname']?>" 
+                    value="<?=$admin['fname']?>" 
                     name="fname">
             </div>
             <div class="mb-3">
               <label class="form-label">Last name</label>
               <input type="text" 
                     class="form-control"
-                    value="<?=$coach['lname']?>"
+                    value="<?=$admin['lname']?>"
                     name="lname">
             </div>
             <div class="mb-3">
               <label class="form-label">Username</label>
               <input type="text" 
                     class="form-control"
-                    value="<?=$coach['username']?>"
+                    value="<?=$admin['username']?>"
                     name="username">
             </div>
             <input type="text"
-                    value="<?=$coach['coach_id']?>"
-                    name="coach_id"
+                    value="<?=$admin['admin_id']?>"
+                    name="admin_id"
                     hidden>
 
             <div class="mb-3">
-              <div class="row row-cols-5">
-                <?php 
-                $subject_ids = str_split(trim($coach['subjects']));
-                foreach ($subjects as $subject){ 
-                  $checked =0;
-                  foreach ($subject_ids as $subject_id ) {
-                    if ($subject_id == $subject['subject_id']) {
-                      $checked =1;
-                    }
-                  }
-                ?>
-                <div class="col">
-                  <input type="checkbox"
-                        name="subjects[]"
-                        <?php if($checked) echo "checked"; ?>
-                        value="<?=$subject['subject_id']?>">
-                        <?=$subject['subject']?>
-                </div>
-                <?php } ?>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label">Grade</label>
-              <div class="row row-cols-5">
-                <?php 
-                  $grade_ids = str_split(trim($coach['grades']));
-                  foreach ($grades as $grade){ 
-                    $checked =0;
-                    foreach ($grade_ids as $grade_id ) {
-                      if ($grade_id == $grade['grade_id']) {
-                        $checked =1;
-                    }
-                  }
-                ?>
-                <div class="col">
-                  <input type="checkbox"
-                        name="grades[]"
-                        <?php if($checked) echo "checked"; ?>
-                        value="<?=$grade['grade_id']?>">
-                        <?=$grade['grade_code']?>-<?=$grade['grade']?>
-                </div>
-                <?php } ?>
-              </div>
+              <label class="form-label">Email</label>
+              <input type="email" 
+                    class="form-control"
+                    value="<?=$admin['email']?>"
+                    name="email">
             </div>
 
           <button type="submit" class="btn btn-primary">Update</button>
@@ -138,7 +95,7 @@ if (isset($_SESSION['admin_id']) &&
         <div class="col"> 
      <form method="post"
               class="shadow p-3 my-5 form-w" 
-              action="req/coach-change.php"
+              action="req/admin-change.php"
               id="change_password">
         <h3>Change Password</h3><hr>
           <?php if (isset($_GET['perror'])) { ?>
@@ -173,8 +130,8 @@ if (isset($_SESSION['admin_id']) &&
             
           </div>
           <input type="text"
-                value="<?=$coach['coach_id']?>"
-                name="coach_id"
+                value="<?=$admin['admin_id']?>"
+                name="admin_id"
                 hidden>
 
           <div class="mb-3">
@@ -223,11 +180,11 @@ if (isset($_SESSION['admin_id']) &&
 <?php 
 
   }else {
-    header("Location: coach.php");
+    header("Location: admin.php");
     exit;
   } 
 }else {
-	header("Location: coach.php");
+	header("Location: admin.php");
 	exit;
 } 
 

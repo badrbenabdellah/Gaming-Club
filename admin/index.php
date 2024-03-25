@@ -23,37 +23,22 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
     <div class="container mt-5">
         <div class="container text-center">
             <div class="row row-cols-5">
-                <a href="coach.php" class="col btn btn-dark m-2 py-3">
+                <a href="admin.php" class="col btn btn-dark m-2 py-3">
                 <i class="fa fa-user-md fs-1" aria-hidden="true"></i><br>
-                    Coachs
+                    Admins
                 </a>
-                <a href="student.php" class="col btn btn-dark m-2 py-3">
-                <i class="fa fa-graduation-cap fs-1" aria-hidden="true"></i><br>
-                    Students
+                <a href="user.php" class="col btn btn-dark m-2 py-3">
+                <i class="fa fa-user fs-1" aria-hidden="true"></i><br>
+                    Users
                 </a>
-                <a href="" class="col btn btn-dark m-2 py-3">
+                <a href="competition.php" class="col btn btn-dark m-2 py-3">
                 <i class="fa fa-pencil-square fs-1" aria-hidden="true"></i><br>
-                    Registrar office
+                    Competition
                 </a>
-                <a href="" class="col btn btn-dark m-2 py-3">
-                <i class="fa fa-cubes fs-1" aria-hidden="true"></i><br>
-                    Class
-                </a>
-                <a href="" class="col btn btn-dark m-2 py-3">
-                <i class="fa fa-columns fs-1" aria-hidden="true"></i><br>
-                    Section
-                </a>
-                <a href="" class="col btn btn-dark m-2 py-3">
-                <i class="fa fa-calendar fs-1" aria-hidden="true"></i><br>
-                    Schedule
-                </a>
-                <a href="" class="col btn btn-dark m-2 py-3">
-                <i class="fa fa-book fs-1" aria-hidden="true"></i><br>
-                    Course
-                </a>
-                <a href="" class="col btn btn-dark m-2 py-3">
-                <i class="fa fa-envelope fs-1" aria-hidden="true"></i><br>
-                    Message
+                
+                <a href="actualité.php" class="col btn btn-dark m-2 py-3">
+                <i class="fa fa-bullhorn fs-1" aria-hidden="true"></i><br>
+                    Actualité
                 </a>
                 
                 <a href="" class="col btn btn-primary m-2 py-3 col-5">

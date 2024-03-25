@@ -6,23 +6,24 @@ if (isset($_SESSION['admin_id']) &&
     if ($_SESSION['role'] == 'Admin') {
       
        include "../Connexion_BDD.php";
-       include "data/grade.php";
-       $grades = getAllGrades($conn);
 
        $fname = '';
        $lname = '';
        $uname = '';
+       $email = '';
 
        if (isset($_GET['fname'])) $fname = $_GET['fname'];
        if (isset($_GET['lname'])) $lname = $_GET['lname'];
        if (isset($_GET['uname'])) $uname = $_GET['uname'];
+       if (isset($_GET['email'])) $email = $_GET['email'];
+
  ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Add Student</title>
+    <title>Admin - Add User</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="icon" href="../images/_LOGO HD.png">
@@ -34,13 +35,13 @@ if (isset($_SESSION['admin_id']) &&
         include "inc/navbar.php";
      ?>
      <div class="container mt-5">
-        <a href="student.php"
+        <a href="user.php"
            class="btn btn-dark">Go Back</a>
 
         <form method="post"
               class="shadow p-3 mt-5 form-w" 
-              action="req/student-add.php">
-        <h3>Add New Student</h3><hr>
+              action="req/user-add.php">
+        <h3>Add New User</h3><hr>
         <?php if (isset($_GET['error'])) { ?>
           <div class="alert alert-danger" role="alert">
            <?=$_GET['error']?>
@@ -73,6 +74,13 @@ if (isset($_SESSION['admin_id']) &&
                  name="username">
         </div>
         <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input type="email" 
+                 class="form-control"
+                 value="<?=$email?>" 
+                 name="email">
+        </div>
+        <div class="mb-3">
           <label class="form-label">Password</label>
           <div class="input-group mb-3">
               <input type="text" 
@@ -83,23 +91,8 @@ if (isset($_SESSION['admin_id']) &&
                       id="gBtn">
                       Random</button>
           </div>
-          
         </div>
         
-        <div class="mb-3">
-          <label class="form-label">Grade</label>
-          <div class="row row-cols-5">
-            <?php foreach ($grades as $grade): ?>
-            <div class="col">
-              <input type="radio"
-                     name="grades[]"
-                     value="<?=$grade['grade_id']?>">
-                     <?=$grade['grade_code']?>-<?=$grade['grade']?>
-            </div>
-            <?php endforeach ?>
-             
-          </div>
-        </div>
 
       <button type="submit" class="btn btn-primary">Add</button>
      </form>

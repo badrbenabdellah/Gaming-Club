@@ -4,19 +4,15 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
 
     if($_SESSION['role'] == 'Admin') {
         include "../Connexion_BDD.php";
-        include "data/coach.php";
-        include "data/subject.php";
-        include "data/grade.php";
-        $coachs = getAllCoachs($conn);
-        
-        
+        include "data/competition.php"; 
+        $competitions = getAllCompetitions($conn)
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Coach</title>
+    <title>Admin - Competition</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="icon" href="../images/_LOGO HD.png">
@@ -26,13 +22,14 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
 <body>
     <?php
         include "inc/navbar.php"; 
-        if($coachs != 0){
+        if($competitions != 0){
     ?>
     <div class="container mt-5">
-        <a href="coach-add.php" class="btn btn-dark">Add New Coach</a>
+        <a href="competition-add.php" class="btn btn-dark">Ajouter une nouvelle compétition</a>
         
-        <form action="coach-search.php" 
-              class="mt-3 n-table">
+        <form action="competition-search.php" 
+              class="mt-3"
+              method="post">
             <div class="input-group mb-3">
                 <input type="text" 
                        class="form-control"
@@ -45,68 +42,46 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
         </form>
 
         <?php if(isset($_GET['error'])) { ?>
-            <div class="alert alert-danger mt-3 n-table" role="alert">
+            <div class="alert alert-danger mt-3" role="alert">
                 <?=$_GET['error']?>
             </div>
         <?php } ?>
 
         <?php if(isset($_GET['success'])) { ?>
-            <div class="alert alert-info mt-3 n-table" role="alert">
+            <div class="alert alert-info mt-3 " role="alert">
                 <?=$_GET['success']?>
             </div>
         <?php } ?>
         <div class="table-responsive">
-        <table class="table table-bordered mt-3 n-table">
+        <table class="table table-bordered mt-3 ">
             <thead>
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">ID</th>
-                    <th scope="col">First Name</th>
-                    <th scope="col">Last Name</th>
-                    <th scope="col">Username</th>
-                    <th scope="col">Subject</th>
-                    <th scope="col">Grade</th>
+                    <th scope="col">Titre</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Date début</th>
+                    <th scope="col">Date fin</th>
+                    <th scope="col">Prix gagnants (USD)</th>
+                    <th scope="col">Conditions participation</th>
                     <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
-                <?php $i = 0; foreach($coachs as $coach) {
+                <?php $i = 0; foreach($competitions as $competition) {
                     $i++; ?>
                 <tr>
                     <th scope="row"><?=$i?></th>
-                    <td><?=$coach['coach_id']?></td>
-                    <td><?=$coach['fname']?></td>
-                    <td><?=$coach['lname']?></td>
-                    <td><?=$coach['username']?></td>
+                    <td><?=$competition['competition_id']?></td>
+                    <td><?=$competition['title']?></td>
+                    <td><?=$competition['description']?></td>
+                    <td><?=$competition['start_date']?></td>
+                    <td><?=$competition['end_date']?></td>
+                    <td><?=$competition['prizes']?></td>
+                    <td><?=$competition['conditions']?></td>
                     <td>
-                        <?php
-                        $s = '';
-                        $subjects = str_split(trim($coach['subjects']));
-                        foreach($subjects as $subject){
-                            $s_temp = getSubjectsById($subject, $conn);
-                            if($s_temp !=0)
-                            $s .=$s_temp['subject_code'].', ';
-                        }
-                        echo $s;
-                        ?>
-                    </td>
-                    <td>
-                        <?php
-                        $g = '';
-                        $grades = str_split(trim($coach['grades']));
-                        foreach($grades as $grade){
-                            $g_temp = getGradeById($grade, $conn);
-                            if($g_temp !=0)
-                            $g .=$g_temp['grade'].',';
-                        }
-                        echo $g;
-                        ?>
-                    </td>
-                    <td>
-                        <a href="coach-edit.php?coach_id=<?=$coach['coach_id']?>" class="btn btn-warning">Edit</a>
-
-                        <a href="coach-delete.php?coach_id=<?=$coach['coach_id']?>"
-                           class="btn btn-danger">Delete</a>
+                        <a href="competition-edit.php?competition_id=<?=$competition['competition_id']?>" class="btn btn-warning">Edit</a>
+                        <a href="competition-delete.php?competition_id=<?=$competition['competition_id']?>" class="btn btn-danger">Delete</a>
                     </td>
                 </tr>
                 <?php } ?>
@@ -115,25 +90,24 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
         </div>
         <?php }else{ ?>
             <div class="alert alert-info .w-450 m-5" role="alert">
-                Empty!
+                Vide !
             </div>
         <?php } ?>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function(){
-            $("#navLinks li:nth-child(2) a").addClass('active');
+            $("#navLinks li:nth-child(4) a").addClass('active');
         });
     </script>
 </body>
+
 </html>
 <?php
-
 }else {
     header("Location: ../Login.php");
     exit;
 }
-
 }else {
     header("Location: ../Login.php");
     exit;
