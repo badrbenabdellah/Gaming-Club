@@ -3,6 +3,7 @@
     require '../include/header.php';
     require '../include/footer.php';
     init_php_session();
+    $mg = $_GET['message'];
 ?>
 <!doctype html>
 <html lang="en">
@@ -34,7 +35,7 @@
 <body>
 
         <?php displayHeader(2); ?>
-
+        <!-- End Toast -->
         <!-- breadcrumb start-->
         <section class="breadcrumb breadcrumb_bg">
             <div class="container">
@@ -52,7 +53,7 @@
         <!-- breadcrumb start-->
 
         <!--::client logo part end::-->
-        <section class="client_logo">
+        <section class="client_logo mt-10">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-12">
@@ -69,7 +70,12 @@
             </div>
         </section>
         <!--::client logo part end::-->
-
+        <div class="alert alert-primary" role="alert" hidden="<?php if (!isset($mg)) echo 'hidden'?>">
+            <?php if(isset($_GET['message'])){
+                echo $_GET['message'];
+            }
+            ?>
+        </div>
         <!--================Blog Area =================-->
         <?php
         require '../database.php';
@@ -77,7 +83,7 @@
         $nombre_tournament_par_page = 3;
 
         // Récupérer le numéro de page actuelle, par défaut 1 si non spécifié
-        $page_actuelle = isset($_GET['page']) ? $_GET['page'] : 1;
+        $page_actuelle = $_GET['page'] ?? 1;
 
         // Calculer l'offset pour la requête SQL
         $offset = ($page_actuelle - 1) * $nombre_tournament_par_page;
@@ -99,8 +105,8 @@
                         <div class="blog_left_sidebar">
                             <?php
                             while ($data = $tournament->fetch(PDO::FETCH_ASSOC)) {
-                                $date = date('d', strtotime($data['date'])); // Jour
-                                $month = date('M', strtotime($data['date'])); // Mois (abréviation)
+                                $date = date('d', strtotime($data['start_date'])); // Jour
+                                $month = date('M', strtotime($data['start_date'])); // Mois (abréviation)
                                 ?>
                                 <article class="blog_item">
                                     <div class="blog_item_img">

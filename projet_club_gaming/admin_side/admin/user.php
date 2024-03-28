@@ -1,11 +1,8 @@
 <?php
-session_start();
-if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
-
-    if($_SESSION['role'] == 'Admin') {
-        include "../Connexion_BDD.php";
-        include "data/user.php";
-        $users = getAllUsers($conn);
+        require '../../user_side/util.php';
+        require '../../user_side/database.php';
+        init_php_session();
+        $users = Database::getAllUsers();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -62,7 +59,7 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
                     <th scope="col">Last Name</th>
                     <th scope="col">Username</th>
                     <th scope="col">Email</th>
-                    <th scope="col">Action</th>
+                    <!--<th scope="col">Action</th>-->
                 </tr>
             </thead>
             <tbody>
@@ -70,15 +67,15 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
                     $i++; ?>
                 <tr>
                     <th scope="row"><?=$i?></th>
-                    <td><?=$user['user_id']?></td>
+                    <td><?=$user['id']?></td>
                     <td><?=$user['fname']?></td>
                     <td><?=$user['lname']?></td>
                     <td><?=$user['username']?></td>
                     <td><?=$user['email']?></td>
-                    <td>
-                        <a href="user-edit.php?user_id=<?=$user['user_id']?>" class="btn btn-warning">Edit</a>
-                        <a href="user-delete.php?user_id=<?=$user['user_id']?>" class="btn btn-danger">Delete</a>
-                    </td>
+                    <!--<td>
+                        <a href="user-edit.php?user_id=<?=$user['id']?>" class="btn btn-warning">Edit</a>
+                        <a href="user-delete.php?user_id=<?=$user['id']?>" class="btn btn-danger">Delete</a>
+                    </td>-->
                 </tr>
                 <?php } ?>
             </tbody>
@@ -98,15 +95,3 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
     </script>
 </body>
 </html>
-<?php
-
-}else {
-    header("Location: ../Login.php");
-    exit;
-}
-
-}else {
-    header("Location: ../Login.php");
-    exit;
-}
-?>

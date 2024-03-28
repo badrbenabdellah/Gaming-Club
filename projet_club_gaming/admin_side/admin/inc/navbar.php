@@ -22,7 +22,7 @@
                 </li>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="actualité.php">Actualité</a>
+                    <a class="nav-link" href="actualite.php">Actualité</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#contact">Settings</a>

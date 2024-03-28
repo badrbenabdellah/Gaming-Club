@@ -1,10 +1,7 @@
-<?php 
-session_start();
-
-if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])) {
-    if ($_SESSION['role'] == 'Admin') {
-        include "../Connexion_BDD.php";
-
+<?php
+        require '../../user_side/util.php';
+        require '../../user_side/database.php';
+        init_php_session();
         $title = '';
         $description = '';
         $start_date = '';
@@ -38,7 +35,7 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])) {
     <div class="container mt-5">
         <a href="competition.php" class="btn btn-dark">Go Back</a>
 
-        <form method="post" class="shadow p-3 mt-5 form-w" action="req/competition-add.php">
+        <form method="post" class="shadow p-3 mt-5 form-w" action="req/competition-add.php" enctype="multipart/form-data">
             <h3>Add New Competition</h3><hr>
             <?php if (isset($_GET['error'])) { ?>
                 <div class="alert alert-danger" role="alert">
@@ -70,11 +67,16 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])) {
 
             
             <div class="mb-3">
-                <label class="form-label">Prizes (USD)</label>
+                <label class="form-label">Price (MAD)</label>
                 <div class="input-group">
                     <span class="input-group-text">$</span>
-                    <input type="number" class="form-control" value="<?= isset($prizes) ? $prizes : '100' ?>" name="prizes" step="1" min="0">
+                    <input type="number" class="form-control" value="<?= $prizes ?? '100' ?>" name="prizes" step="1" min="0">
                 </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Image</label>
+                <input type="file" class="form-control" name="image" accept="image/*" >
             </div>
 
             <div class="mb-3">
@@ -93,13 +95,3 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])) {
     </script>
 </body>
 </html>
-<?php 
-    } else {
-        header("Location: ../Login.php");
-        exit;
-    } 
-} else {
-    header("Location: ../Login.php");
-    exit;
-} 
-?>

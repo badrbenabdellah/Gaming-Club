@@ -1,19 +1,24 @@
 <?php 
-session_start();
-
-if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])) {
-    if ($_SESSION['role'] == 'Admin') {
-
+        require '../../../user_side/util.php';
+        require '../../../user_side/database.php';
+        init_php_session();
         if (isset($_POST['title']) &&
             isset($_POST['description']) &&
             isset($_POST['start_date']) &&
             isset($_POST['end_date']) &&
             isset($_POST['prizes']) &&
-            isset($_POST['conditions'])) {
+            isset($_POST['conditions']) && isset($_FILES['image'])) {
 
-            include "../../Connexion_BDD.php";
-            include "../data/competition.php";
+            $nom_fichier = $_FILES['image']["name"];
+            $taille_fichier = $_FILES['image']["size"];
+            $type_fichier = $_FILES['image']["type"];
+            $temp_fichier = $_FILES['image']["tmp_name"];
 
+            $extensions_autorisees = array("jpg", "jpeg", "png");
+            $extension_upload = strtolower(pathinfo($nom_fichier, PATHINFO_EXTENSION));
+            if (in_array($extension_upload, $extensions_autorisees)) {
+            $chemin_destination = "../../../user_side/img/tournament/".$nom_fichier;
+            move_uploaded_file($temp_fichier, $chemin_destination);
             $title = $_POST['title'];
             $description = $_POST['description'];
             $start_date = $_POST['start_date'];
@@ -28,14 +33,17 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])) {
                 exit;
             } else {
                 // Insérer les données dans la base de données
-                $sql = "INSERT INTO competition (title, description, start_date, end_date, prizes, conditions) VALUES (?, ?, ?, ?, ?, ?)";
-                $stmt = $conn->prepare($sql);
-                $stmt->execute([$title, $description, $start_date, $end_date, $prizes, $conditions]);
+                Database::addTournament($title,$description,$start_date, $end_date, $prizes, $conditions,$chemin_destination);
+                $sm = "New competition registered successfully";
+                header("Location: ../competition-add.php?success=$sm");
+                exit;
             }
 
-            $sm = "New competition registered successfully";
-            header("Location: ../competition-add.php?success=$sm");
+            } else {
+            $em = "Only JPG, JPEG, and PNG files are allowed for profile photos.";
+            header("Location: ../competition-add.php?error=$em");
             exit;
+            }
 
         } else {
             $em = "An error occurred";
@@ -43,12 +51,3 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])) {
             exit;
         }
 
-    } else {
-        header("Location: ../../logout.php");
-        exit;
-    } 
-} else {
-    header("Location: ../../logout.php");
-    exit;
-} 
-?>

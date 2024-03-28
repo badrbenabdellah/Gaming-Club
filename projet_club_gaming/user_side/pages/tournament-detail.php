@@ -56,11 +56,12 @@ init_php_session();
 </div> -->
 <!--================Blog Area =================-->
 <div id="popup" class="alert alert-info" role="alert">
-    <?php if(isset($_SESSION['apply_success_message'])){
-        echo $_SESSION['apply_success_message'];
+    <?php if(isset($_GET['message'])){
+        echo $_GET['message'];
     }
-        ?>
+    ?>
 </div>
+
 <section class="blog_area single-post-area section_padding">
     <div class="container">
         <div class="row">
@@ -74,7 +75,7 @@ init_php_session();
                     <div class="col-lg-8 posts-list m-3">
                         <div class="single-post">
                             <div class="feature-img">
-                                <img class="img-fluid" src="<?php echo $tounament_detail['image_path'] ?>" alt="">
+                                <img class="card-img rounded-0" src="<?php echo $tounament_detail['image_path'] ?>" alt="">
                             </div>
                             <div class="blog_details">
                                 <h2><?php echo $tounament_detail['title']; ?></h2>

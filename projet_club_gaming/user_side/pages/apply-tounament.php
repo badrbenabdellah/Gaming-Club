@@ -5,8 +5,13 @@ require '../database.php';
 //require 'include/footer.php';
 init_php_session();
 if(isset($_POST['name']) && !empty($_POST['name']) && isset($_POST['email']) && !empty($_POST['email']) ){
-    Database::addParticipations($_GET['id'],$_POST['name'],$_POST['email']);
-    header('location: tournament-detail.php'.$_GET['id']);
+    //if(Database::AlreadyHaveParticipation($_POST['name'], $_GET['id'])){
+        //$message = 'You have a participation for this tournament';
+    //}else{
+        //$message = 'Thank you for registering for the tournament! We are delighted to have you on board and look forward to experiencing exciting moments together. Good luck, and may the best player win!';
+        //Database::addParticipations($_GET['id'],$_POST['name'],$_POST['email']);
+    //}
+    //header('location: tournament-detail.php?id='.$_GET['id'].'?message='.$message);
 }
 ?>
 <!doctype html>
@@ -29,14 +34,12 @@ if(isset($_POST['name']) && !empty($_POST['name']) && isset($_POST['email']) && 
     <div class="mt-7 bg-white border border-gray-200 rounded-xl shadow-sm dark:bg-gray-800 dark:border-gray-700">
         <div class="p-4 sm:p-7">
             <div class="mt-5">
-                <div class="py-3 flex items-center text-xs text-gray-400 uppercase before:flex-[1_1_0%] before:border-t before:border-gray-200 before:me-6 after:flex-[1_1_0%] after:border-t after:border-gray-200 after:ms-6 dark:text-gray-500 dark:before:border-gray-600 dark:after:border-gray-600">Or</div>
-
                 <!-- Form -->
                 <form method="post" action="apply-tounament.php" enctype="multipart/form-data">
                     <div class="grid gap-y-4">
                         <!-- Form Group -->
                         <div>
-                            <label for="username" class="block text-sm mb-2 dark:text-white">Name</label>
+                            <label for="name" class="block text-sm mb-2 dark:text-white">Name</label>
                             <div class="relative">
                                 <input type="text" id="name" name="name" class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" required aria-describedby="password-error">
                                 <div class="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
@@ -70,9 +73,13 @@ if(isset($_POST['name']) && !empty($_POST['name']) && isset($_POST['email']) && 
 </main>
     <?php
         }else{
-            $_SESSION['apply_success_message'] = 'Félicitations! Vous êtes inscrit au tournoi avec succès.';
-            Database::addParticipations($_GET['id'], $_SESSION['username'],$_SESSION['email']);
-            header('location: tournament-detail.php?id='.$_GET['id']);
+            //if(Database::AlreadyHaveParticipation($_SESSION['fname'].' '.$_SESSION['lname'],$_GET['id'])){
+                //$message = 'You have a participation for this tournament';
+            //}else{
+                Database::addParticipations($_GET['id'], $_SESSION['fname'].' '.$_SESSION['lname'],$_SESSION['email']);
+                $message = 'Thank you for registering for the tournament! We are delighted to have you on board and look forward to experiencing exciting moments together. Good luck, and may the best player win!';
+            //}
+            header('location: tournament.php?message='.$message);
     }
     }
     ?>

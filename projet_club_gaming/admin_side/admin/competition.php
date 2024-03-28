@@ -1,11 +1,8 @@
 <?php
-session_start();
-if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
-
-    if($_SESSION['role'] == 'Admin') {
-        include "../Connexion_BDD.php";
-        include "data/competition.php"; 
-        $competitions = getAllCompetitions($conn)
+        require '../../user_side/util.php';
+        require '../../user_side/database.php';
+        init_php_session();
+        $competitions = Database::getAllTournament();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -59,10 +56,11 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
                     <th scope="col">#</th>
                     <th scope="col">ID</th>
                     <th scope="col">Titre</th>
+                    <th scope="col">Image</th>
                     <th scope="col">Description</th>
                     <th scope="col">Date début</th>
                     <th scope="col">Date fin</th>
-                    <th scope="col">Prix gagnants (USD)</th>
+                    <th scope="col">Prix de participation(MAD)</th>
                     <th scope="col">Conditions participation</th>
                     <th scope="col">Action</th>
                 </tr>
@@ -72,16 +70,17 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
                     $i++; ?>
                 <tr>
                     <th scope="row"><?=$i?></th>
-                    <td><?=$competition['competition_id']?></td>
+                    <td><?=$competition['id']?></td>
                     <td><?=$competition['title']?></td>
-                    <td><?=$competition['description']?></td>
+                    <td><img src="<?php echo $competition['image_path'];?>" width="100" height="100" alt=""></td>
+                    <td><?=$competition['detail']?></td>
                     <td><?=$competition['start_date']?></td>
                     <td><?=$competition['end_date']?></td>
-                    <td><?=$competition['prizes']?></td>
+                    <td><?=$competition['price']?></td>
                     <td><?=$competition['conditions']?></td>
                     <td>
-                        <a href="competition-edit.php?competition_id=<?=$competition['competition_id']?>" class="btn btn-warning">Edit</a>
-                        <a href="competition-delete.php?competition_id=<?=$competition['competition_id']?>" class="btn btn-danger">Delete</a>
+                        <a href="competition-edit.php?id=<?=$competition['id']?>" class="btn btn-warning">Edit</a>
+                        <a href="competition-delete.php?id=<?=$competition['id']?>" class="btn btn-danger">Delete</a>
                     </td>
                 </tr>
                 <?php } ?>
@@ -103,13 +102,3 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
 </body>
 
 </html>
-<?php
-}else {
-    header("Location: ../Login.php");
-    exit;
-}
-}else {
-    header("Location: ../Login.php");
-    exit;
-}
-?>

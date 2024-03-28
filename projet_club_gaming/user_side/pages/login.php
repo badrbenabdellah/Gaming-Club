@@ -9,11 +9,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             if(password_verify($_POST['password'], $req['password'])){
                 if ($req['is_confirm']){
                     $_SESSION['username'] = $req['username'];
+                    $_SESSION['fname'] = $req['fname'];
+                    $_SESSION['lname'] = $req['lname'];
                     $_SESSION['profile_photo'] = $req['profile_photo'];
                     $_SESSION['email'] = $req['email'];
                     $_SESSION['id'] = $req['id'];
                     $_SESSION['is_admin'] = $req['is_admin'];
-                    $_SESSION['apply_success_message'] = null;
                     header("location: ../index.php");
                     if(is_admin()){
                         header("location: ../../admin_side/admin/index.php");

@@ -1,21 +1,11 @@
-<?php 
-session_start();
-if (isset($_SESSION['admin_id']) && 
-    isset($_SESSION['role'])     &&
-    isset($_GET['competition_id'])) {
-
-    if ($_SESSION['role'] == 'Admin') {
-      
-       include "../Connexion_BDD.php";
-       include "data/competition.php";
+<?php
+require '../../user_side/util.php';
+require '../../user_side/database.php';
+init_php_session();
+if (isset($_GET['id'])) {
        
-       $competition_id = $_GET['competition_id'];
-       $competition = getCompetitionById($competition_id, $conn);
-
-       if ($competition == 0) {
-         header("Location: competition.php");
-         exit;
-       }
+       $id = $_GET['id'];
+       $competition = Database::getTournamentById($id);
        
  ?>
 <!DOCTYPE html>
@@ -67,7 +57,7 @@ if (isset($_SESSION['admin_id']) &&
                 <label class="form-label">Description</label>
                 <input type="text"
                        class="form-control" 
-                       value="<?=$competition['description']?>"
+                       value="<?=$competition['detail']?>"
                        name="description">
             </div>
             <div class="mb-3">
@@ -91,14 +81,14 @@ if (isset($_SESSION['admin_id']) &&
                   <span class="input-group-text">$</span>
                   <input type="number" 
                          class="form-control"
-                         value="<?=$competition['prizes']?>" 
+                         value="<?=$competition['price']?>"
                          name="prizes" step="1" min="0">
               </div>
             </div>
 
 
             <input type="text"
-                value="<?=$competition['competition_id']?>"
+                value="<?=$competition['id']?>"
                 name="competition_id"
                 hidden>
             <div class="mb-3">
@@ -121,15 +111,11 @@ if (isset($_SESSION['admin_id']) &&
     </script>
 </body>
 </html>
-<?php 
+<?php
 
   }else {
     header("Location: competition.php");
     exit;
-  } 
-}else {
-	header("Location: competition.php");
-	exit;
-} 
+  }
 
 ?>

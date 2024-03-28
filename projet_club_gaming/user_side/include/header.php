@@ -7,6 +7,7 @@
         $link3 = '';
         $link4 = '';
         $link5 = '';
+        $link6 = '';
         switch ($pageNumber){
             case 1:{
                 $link2 = 'pages/news.php';
@@ -21,6 +22,7 @@
                 $link3 = 'login.php';
                 $link4 = 'join.php';
                 $link5 = 'tournament.php';
+                $link6 = '../';
             }
             break;
             default: echo 'Incorrect';
@@ -56,13 +58,6 @@
                                         <a class="nav-link" href="<?=$link5?>">Tournaments</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="#" id="navbarDropdown"
-                                           role="button" data-toggle="dropdown" aria-haspopup="true"
-                                           aria-expanded="false">
-                                            Member area
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
                                         <?php
                                             if(!is_logged())
                                                 echo '<a class="nav-link" href="'.$link3.'" id="navbarDropdown1"
@@ -79,7 +74,7 @@
                                 ?>
                                 <div class="dropdown">
                                     <button class="btn " type="button" data-bs-toggle="dropdown" aria-expanded="false" >
-                                        <img class="inline-block size-8 " style="border-radius: 50%" width="50px" height="50px" src="<?php echo $_SESSION['profile_photo']; ?>" alt="Image Description">
+                                        <img class="inline-block size-8 " style="border-radius: 50%" width="50px" height="50px" src="<?php echo $link6.$_SESSION['profile_photo']; ?>" alt="Image Description">
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="<?=$link1?>index.php?action=logout">Log out</a></li>

@@ -1,7 +1,6 @@
 <?php
 require '../../user_side/util.php';
 require '../../user_side/database.php';
-require 'data/admin.php';
 init_php_session();
 $admins = Database::getAllAdmins();
 ?>

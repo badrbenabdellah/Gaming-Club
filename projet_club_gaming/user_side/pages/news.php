@@ -58,7 +58,7 @@
     $nombre_actualites_par_page = 3;
 
     // Récupérer le numéro de page actuelle, par défaut 1 si non spécifié
-    $page_actuelle = isset($_GET['page']) ? $_GET['page'] : 1;
+    $page_actuelle = $_GET['page'] ?? 1;
 
     // Calculer l'offset pour la requête SQL
     $offset = ($page_actuelle - 1) * $nombre_actualites_par_page;

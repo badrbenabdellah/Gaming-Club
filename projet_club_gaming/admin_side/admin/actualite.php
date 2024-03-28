@@ -1,13 +1,8 @@
 <?php
-session_start();
-if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
-
-    if($_SESSION['role'] == 'Admin') {
-        if(isset($_POST['searchkey'])) {
-        $search_key = $_POST['searchkey'];
-        include "../Connexion_BDD.php";
-        include "data/actualité.php"; 
-        $actualités = SearchActualité($search_key,$conn);
+        require '../../user_side/util.php';
+        require '../../user_side/database.php';
+        init_php_session();
+        $actualités = Database::getAllNews();// Inclure le fichier des fonctions pour gérer les actualités
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,9 +22,9 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
         if($actualités != 0){
     ?>
     <div class="container mt-5">
-        <a href="actualité-add.php" class="btn btn-dark">Ajouter une nouvelle actualité</a> <!-- Lien pour ajouter une nouvelle actualité -->
+        <a href="actualite-add.php" class="btn btn-dark">Ajouter une nouvelle actualité</a> <!-- Lien pour ajouter une nouvelle actualité -->
         
-        <form action="actualité-search.php" 
+        <form action="actualite-search.php"
               class="mt-3"
               method="post">
             <div class="input-group mb-3">
@@ -72,14 +67,14 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
                     $i++; ?>
                 <tr>
                     <th scope="row"><?=$i?></th>
-                    <td><?=$actualité['id']?></td>
-                    <td><img src="<?php echo $actualité['image'];?>"></td>
+                    <td><?=$actualité['nid']?></td>
+                    <td><img src="<?php echo $actualité['image_path'];?>" width="100" height="100" alt=""></td>
                     <td><?=$actualité['title']?></td>
                     <td><?=$actualité['content']?></td>
                     <td><?=$actualité['date']?></td>
                     <td>
-                        <a href="actualité-edit.php?id=<?=$actualité['id']?>" class="btn btn-warning">Edit</a>
-                        <a href="actualité-delete.php?id=<?=$actualité['id']?>" class="btn btn-danger">Delete</a>
+                        <a href="actualite-edit.php?id=<?=$actualité['nid']?>" class="btn btn-warning">Edit</a>
+                        <a href="actualite-delete.php?id=<?=$actualité['nid']?>" class="btn btn-danger">Delete</a>
                     </td>
                 </tr>
                 <?php } ?>
@@ -88,7 +83,7 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
         </div>
         <?php }else{ ?>
             <div class="alert alert-info .w-450 m-5" role="alert">
-                <a href="actualité.php" class="btn btn-dark">Go Back</a>
+                Vide !
             </div>
         <?php } ?>
     </div>
@@ -100,17 +95,3 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
     </script>
 </body>
 </html>
-<?php
-}else {
-    header("Location: actualité.php");
-    exit;
-  }
-}else {
-    header("Location: ../Login.php");
-    exit;
-}
-}else {
-    header("Location: ../Login.php");
-    exit;
-}
-?>

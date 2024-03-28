@@ -1,11 +1,7 @@
-<?php 
-session_start();
-if (isset($_SESSION['admin_id']) && 
-    isset($_SESSION['role'])) {
-
-    if ($_SESSION['role'] == 'Admin') {
-    	
-
+<?php
+require '../../../user_side/util.php';
+require '../../../user_side/database.php';
+init_php_session();
 if (isset($_POST['competition_id']) &&
     isset($_POST['title']) &&
     isset($_POST['description']) &&
@@ -13,9 +9,6 @@ if (isset($_POST['competition_id']) &&
     isset($_POST['end_date']) &&
     isset($_POST['prizes']) &&
     isset($_POST['conditions'])) {
-    
-    include '../../Connexion_BDD.php';
-    include "../data/competition.php";
 
     $competition_id = $_POST['competition_id'];
     $title = $_POST['title'];
@@ -25,7 +18,7 @@ if (isset($_POST['competition_id']) &&
     $prizes = $_POST['prizes'];
     $conditions = $_POST['conditions'];
 
-    $data = 'competition_id='.$competition_id;
+    $data = 'id='.$competition_id;
 
     if (empty($title)) {
 		$em  = "Title is required";
@@ -48,14 +41,10 @@ if (isset($_POST['competition_id']) &&
       header("Location: ../competition-edit.php?error=$em&$data");
       exit;
     }else {
-          $sql = "UPDATE competition SET
-                  title = ?, description = ?, start_date = ?, end_date = ?, prizes=?, conditions=?
-                  WHERE competition_id=?";
-          $stmt = $conn->prepare($sql);
-          $stmt->execute([$title,$description, $start_date, $end_date, $prizes, $conditions, $competition_id]);
-          $sm = "successfully updated!";
-          header("Location: ../competition-edit.php?success=$sm&$data");
-          exit;
+       Database::updateTournamentById($competition_id,$title,$description,$start_date,$end_date,$prizes,$conditions);
+      $sm = "successfully updated!";
+      header("Location: ../competition-edit.php?success=$sm&$data");
+      exit;
     }
     
   }else {
@@ -63,12 +52,3 @@ if (isset($_POST['competition_id']) &&
     header("Location: ../competition-edit.php?error=$em");
     exit;
   }
-
-  }else {
-    header("Location: ../../logout.php");
-    exit;
-  } 
-}else {
-	header("Location: ../../logout.php");
-	exit;
-} 

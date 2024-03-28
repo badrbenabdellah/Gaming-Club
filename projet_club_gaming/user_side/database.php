@@ -3,21 +3,23 @@
 require "db-config.php";
 class Database
 {
-    public static function addUsers($username, $email, $password, $profile_photo)
+    public static function addUsers($username, $email,$fname, $lname, $password, $profile_photo)
     {
         try {
             global $DB_DSN, $DB_USER, $DB_PASS, $DB_OP;
             $PDO = new PDO($DB_DSN, $DB_USER, $DB_PASS, $DB_OP);
             $cle = rand(1000000, 9000000);
-            if($profile_photo == null){
+            if(empty($profile_photo)){
                 $profile_photo = '../img/user_profile_image/author_3.png';
             }
-            $stmt = $PDO->prepare("INSERT INTO users (email, password, profile_photo, username, cle) VALUES (:email, :password, :profile_photo, :username, :cle)");
+            $stmt = $PDO->prepare("INSERT INTO users (email, password, profile_photo, username,fname,lname, cle) VALUES (:email, :password, :profile_photo, :username,:fname,:lname, :cle)");
             $stmt->bindParam(':email', $email);
             $stmt->bindParam(':password', $password);
             $stmt->bindParam(':profile_photo', $profile_photo);
             $stmt->bindParam(':username', $username);
             $stmt->bindParam(':cle', $cle);
+            $stmt->bindParam(':fname', $fname);
+            $stmt->bindParam(':lname', $lname);
             $stmt->execute();
         } catch (PDOException $e) {
             echo 'ERREUR: '.$e->getMessage();
@@ -33,6 +35,24 @@ class Database
             $stmt->bindParam(':username', $username);
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo 'ERREUR: '.$e->getMessage();
+        }
+    }
+
+    public static function getAllUsers()
+    {
+        try {
+            global $DB_DSN, $DB_USER, $DB_PASS, $DB_OP;
+            $PDO = new PDO($DB_DSN, $DB_USER, $DB_PASS, $DB_OP);
+            $sql = 'SELECT * FROM users WHERE is_admin = FALSE';
+            $stmt = $PDO->prepare($sql);
+            $stmt->execute();
+            if ($stmt->rowCount() >= 1) {
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }else {
+                return 0;
+            }
         } catch (PDOException $e) {
             echo 'ERREUR: '.$e->getMessage();
         }
@@ -82,13 +102,15 @@ class Database
             echo 'ERREUR: '.$e->getMessage();
         }
     }
-    public static function getNews()
+    public static function getAllNews()
     {
         try {
             global $DB_DSN, $DB_USER, $DB_PASS, $DB_OP;
             $PDO = new PDO($DB_DSN, $DB_USER, $DB_PASS, $DB_OP);
             $sql = 'SELECT * FROM news';
-            return $PDO->query($sql);
+            $stmt = $PDO->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             echo 'ERREUR: '.$e->getMessage();
         }
@@ -198,7 +220,7 @@ class Database
         try {
             global $DB_DSN, $DB_USER, $DB_PASS, $DB_OP;
             $PDO = new PDO($DB_DSN, $DB_USER, $DB_PASS, $DB_OP);
-            $stmt = $PDO->prepare("SELECT * FROM tournament ORDER BY date DESC LIMIT :limit OFFSET :offset");
+            $stmt = $PDO->prepare("SELECT * FROM tournament ORDER BY start_date DESC LIMIT :limit OFFSET :offset");
             $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
             $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
             $stmt->execute();
@@ -246,6 +268,21 @@ class Database
             $stmt->bindParam(':name', $name);
             $stmt->bindParam(':email', $email);
             $stmt->execute();
+        } catch (PDOException $e) {
+            echo 'ERREUR: '.$e->getMessage();
+        }
+    }
+
+    public static function AlreadyHaveParticipation($name, $id)
+    {
+        try {
+            global $DB_DSN, $DB_USER, $DB_PASS, $DB_OP;
+            $PDO = new PDO($DB_DSN, $DB_USER, $DB_PASS, $DB_OP);
+            $stmt = $PDO->prepare("SELECT * FROM participation WHERE name =: name AND id:= id ");
+            $stmt->bindParam(":name",$name);
+            $stmt->bindParam(":id",$id);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             echo 'ERREUR: '.$e->getMessage();
         }
@@ -353,6 +390,121 @@ class Database
         }
     }
 
+    public static function AddNews($title, $content, $date,$image_path)
+    {
+        try {
+            global $DB_DSN, $DB_USER, $DB_PASS, $DB_OP;
+            $PDO = new PDO($DB_DSN, $DB_USER, $DB_PASS, $DB_OP);
+            $stmt = $PDO->prepare("INSERT INTO news (title, content, date, image_path) VALUES (:title, :content, :date, :image_path)");
+            $stmt->bindParam(':title', $title);
+            $stmt->bindParam(':content', $content);
+            $stmt->bindParam(':date', $date);
+            $stmt->bindParam(':image_path', $image_path);
+            $stmt->execute();
+        }catch (PDOException $e){
+            echo 'ERREUR: '.$e->getMessage();
+        }
+    }
 
+    public static function updateNewsById($id,$title,$content)
+    {
+        try {
+            global $DB_DSN, $DB_USER, $DB_PASS, $DB_OP;
+            $PDO = new PDO($DB_DSN, $DB_USER, $DB_PASS, $DB_OP);
+            $sql = 'UPDATE news SET title = :title, content = :content WHERE nid = :id';
+            $stmt = $PDO->prepare($sql);
+            $stmt->bindParam(':title', $title);
+            $stmt->bindParam(':content', $content);
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            echo 'ERREUR: '.$e->getMessage();
+        }
+    }
+
+    public static function removeNewsbyId($id)
+    {
+        try {
+            global $DB_DSN, $DB_USER, $DB_PASS, $DB_OP;
+            $PDO = new PDO($DB_DSN, $DB_USER, $DB_PASS, $DB_OP);
+            $sql = 'DELETE FROM news WHERE nid = :id';
+            $stmt = $PDO->prepare($sql);
+            $stmt->bindParam(':id', $id);
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            echo 'ERREUR: '.$e->getMessage();
+        }
+    }
+
+    public static function getAllTournament()
+    {
+        try {
+            global $DB_DSN, $DB_USER, $DB_PASS, $DB_OP;
+            $PDO = new PDO($DB_DSN, $DB_USER, $DB_PASS, $DB_OP);
+            $sql = 'SELECT * FROM tournament';
+            $stmt = $PDO->prepare($sql);
+            $stmt->execute();
+            if ($stmt->rowCount() >= 1) {
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }else {
+                return 0;
+            }
+        } catch (PDOException $e) {
+            echo 'ERREUR: '.$e->getMessage();
+        }
+    }
+
+    public static function addTournament($title, $description, $start_date, $end_date, $price, $conditions,$image_path)
+    {
+        try {
+            global $DB_DSN, $DB_USER, $DB_PASS, $DB_OP;
+            $PDO = new PDO($DB_DSN, $DB_USER, $DB_PASS, $DB_OP);
+            $stmt = $PDO->prepare("INSERT INTO tournament (title, detail, start_date, end_date, price, conditions, image_path) VALUES (:title, :description, :start_date, :end_date, :price, :conditions, :image_path)");
+            $stmt->bindParam(':title', $title);
+            $stmt->bindParam(':description', $description);
+            $stmt->bindParam(':start_date', $start_date);
+            $stmt->bindParam(':end_date', $end_date);
+            $stmt->bindParam(':price', $price);
+            $stmt->bindParam(':conditions', $conditions);
+            $stmt->bindParam(':image_path', $image_path);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            echo 'ERREUR: '.$e->getMessage();
+        }
+    }
+
+    public static function updateTournamentById($id,$title,$description,$start_date,$end_date,$price,$conditions)
+    {
+        try {
+            global $DB_DSN, $DB_USER, $DB_PASS, $DB_OP;
+            $PDO = new PDO($DB_DSN, $DB_USER, $DB_PASS, $DB_OP);
+            $sql = 'UPDATE tournament SET title = :title, detail = :detail,start_date = :start_date, end_date = :end_date,price = :price, conditions = :conditions  WHERE id = :id';
+            $stmt = $PDO->prepare($sql);
+            $stmt->bindParam(':title', $title);
+            $stmt->bindParam(':detail', $description);
+            $stmt->bindParam(':id', $id);
+            $stmt->bindParam(':start_date', $start_date);
+            $stmt->bindParam(':end_date', $end_date);
+            $stmt->bindParam(':price', $price);
+            $stmt->bindParam(':conditions', $conditions);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            echo 'ERREUR: '.$e->getMessage();
+        }
+    }
+
+    public static function removeTournament($id)
+    {
+        try {
+            global $DB_DSN, $DB_USER, $DB_PASS, $DB_OP;
+            $PDO = new PDO($DB_DSN, $DB_USER, $DB_PASS, $DB_OP);
+            $sql = 'DELETE FROM tournament WHERE id = :id';
+            $stmt = $PDO->prepare($sql);
+            $stmt->bindParam(':id', $id);
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            echo 'ERREUR: '.$e->getMessage();
+        }
+    }
 }
 ?>

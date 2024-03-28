@@ -1,22 +1,16 @@
-<?php 
-session_start();
-if (isset($_SESSION['admin_id']) && 
-    isset($_SESSION['role'])     &&
-    isset($_GET['id'])) {
-
-    if ($_SESSION['role'] == 'Admin') {
-      
-       include "../Connexion_BDD.php";
-       include "data/actualité.php";
+<?php
+require '../../user_side/util.php';
+require '../../user_side/database.php';
+init_php_session();
+if (isset($_GET['id'])) {
        
        $id = $_GET['id'];
-       $actualité = getActualitéById($id, $conn);
+       $actu = Database::getNewsById($id);
 
-       if ($actualité == 0) {
-         header("Location: actualité.php");
+       if ($actu == 0) {
+         header("Location: actualite.php");
          exit;
        }
-       
  ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -35,7 +29,7 @@ if (isset($_SESSION['admin_id']) &&
         include "inc/navbar.php";
      ?>
      <div class="container mt-5">
-        <a href="actualité.php"
+        <a href="actualite.php"
            class="btn btn-dark">Go Back</a>
 
         <div class="row"> <!-- Nouvelle ligne pour placer les deux formulaires côte à côte -->
@@ -43,7 +37,7 @@ if (isset($_SESSION['admin_id']) &&
 
             <form method="post"
                   class="shadow p-3 mt-5 form-w" 
-                  action="req/actualité-edit.php">
+                  action="req/actualite-edit.php">
             <h3>Edit Actualité</h3><hr>
             <?php if (isset($_GET['error'])) { ?>
               <div class="alert alert-danger" role="alert">
@@ -59,18 +53,18 @@ if (isset($_SESSION['admin_id']) &&
                 <label class="form-label">Title</label>
                 <input type="text" 
                        class="form-control" 
-                       value="<?=$actualité['title']?>"
+                       value="<?=$actu['title']?>"
                        name="title">
             </div>
             <div class="mb-3">
                 <label class="form-label">Content</label>
                 <input type="text"
                        class="form-control"
-                       value="<?=$actualité['content']?>"
+                       value="<?=$actu['content']?>"
                        name="content">
             </div>
             <input type="text"
-                value="<?=$actualité['id']?>"
+                value="<?=$actu['nid']?>"
                 name="id"
                 hidden>
 
@@ -95,12 +89,8 @@ if (isset($_SESSION['admin_id']) &&
 <?php 
 
   }else {
-    header("Location: actualité.php");
+    header("Location: actualite.php");
     exit;
-  } 
-}else {
-	header("Location: actualité.php");
-	exit;
-} 
+  }
 
 ?>

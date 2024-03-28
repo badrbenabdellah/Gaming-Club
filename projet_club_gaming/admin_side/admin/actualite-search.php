@@ -3,9 +3,11 @@ session_start();
 if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
 
     if($_SESSION['role'] == 'Admin') {
+        if(isset($_POST['searchkey'])) {
+        $search_key = $_POST['searchkey'];
         include "../Connexion_BDD.php";
         include "data/actualité.php"; 
-        $actualités = getAllActualites($conn)// Inclure le fichier des fonctions pour gérer les actualités
+        $actualités = SearchActualité($search_key,$conn);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,9 +27,9 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
         if($actualités != 0){
     ?>
     <div class="container mt-5">
-        <a href="actualité-add.php" class="btn btn-dark">Ajouter une nouvelle actualité</a> <!-- Lien pour ajouter une nouvelle actualité -->
+        <a href="actualite-add.php" class="btn btn-dark">Ajouter une nouvelle actualité</a> <!-- Lien pour ajouter une nouvelle actualité -->
         
-        <form action="actualité-search.php" 
+        <form action="actualite-search.php"
               class="mt-3"
               method="post">
             <div class="input-group mb-3">
@@ -76,8 +78,8 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
                     <td><?=$actualité['content']?></td>
                     <td><?=$actualité['date']?></td>
                     <td>
-                        <a href="actualité-edit.php?id=<?=$actualité['id']?>" class="btn btn-warning">Edit</a>
-                        <a href="actualité-delete.php?id=<?=$actualité['id']?>" class="btn btn-danger">Delete</a>
+                        <a href="actualite-edit.php?id=<?=$actualité['id']?>" class="btn btn-warning">Edit</a>
+                        <a href="actualite-delete.php?id=<?=$actualité['id']?>" class="btn btn-danger">Delete</a>
                     </td>
                 </tr>
                 <?php } ?>
@@ -86,7 +88,7 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
         </div>
         <?php }else{ ?>
             <div class="alert alert-info .w-450 m-5" role="alert">
-                Vide !
+                <a href="actualite.php" class="btn btn-dark">Go Back</a>
             </div>
         <?php } ?>
     </div>
@@ -99,6 +101,10 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
 </body>
 </html>
 <?php
+}else {
+    header("Location: actualite.php");
+    exit;
+  }
 }else {
     header("Location: ../Login.php");
     exit;

@@ -43,7 +43,7 @@ if (isset($_SESSION['admin_id']) && isset($_SESSION['role'])){
                     Competition
                 </a>
                 
-                <a href="actualité.php" class="col btn btn-dark m-2 py-3">
+                <a href="actualite.php" class="col btn btn-dark m-2 py-3">
                 <i class="fa fa-bullhorn fs-1" aria-hidden="true"></i><br>
                     Actualité
                 </a>
